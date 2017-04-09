@@ -4,9 +4,9 @@
 AcceleroMMA7361 accelero;
 Servo miServo;
 int x;
-int y;
+int y,yant,yant2;
 int z;
-int angulo=90;
+int angulo=90,multiplicador=0;
 
 void setup()
 {
@@ -16,7 +16,8 @@ void setup()
   accelero.setARefVoltage(3.3);                   //sets the AREF voltage to 3.3V
   accelero.setSensitivity(LOW);                   //sets the sensitivity to +/-6G
   accelero.calibrate();
-  
+  yant= accelero.getYAccel();
+  yant2=yant;
 }
 
 void loop()
@@ -31,7 +32,20 @@ void loop()
   Serial.print(" \tz: ");
   Serial.print(z);
   Serial.print("\tG*10^-2");
-  angulo=constrain(angulo,0,180);
-  miServo.write((angulo+y*0.5));
-  delay(100);                                     //make it readable
+  if((y > yant +25 ) && (y > yant2 +25)){
+    //Que el multiplicador sea la diferencia de valores
+    //multiplicador= y-
+    angulo=constrain(angulo,0,180);
+    miServo.write((angulo+y*0.25));
+    delay(300);   
+  } 
+  else if((y < yant -25)&&(y < yant2 -25  )){
+    angulo=constrain(angulo,0,180);
+    miServo.write((angulo+y*0.25));
+    delay(300);   
+  }
+ // delay(200);   
+ //make it readable
+ yant = y;
+ yant2=yant;
 }
