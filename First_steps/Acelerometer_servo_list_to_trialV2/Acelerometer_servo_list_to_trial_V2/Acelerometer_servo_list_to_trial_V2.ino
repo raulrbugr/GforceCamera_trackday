@@ -78,6 +78,7 @@ void loop()
   
  // delay(200);   
  //make it readable
- yant = y;
  yant2=yant;
+ yant = y;
+ 
 }
